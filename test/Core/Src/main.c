@@ -1,14 +1,45 @@
 #include "main.h"
+#include <stdbool.h>
+
 #define SYSCLOCK 72000000U
 
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 
+void setDigit(int digit) {
+  switch(digit) {
+    case 0:
+       LL_GPIO_ResetOutputPin(GPIOB, LL_GPIO_PIN_3);
+       LL_GPIO_ResetOutputPin(GPIOB, LL_GPIO_PIN_4);
+       LL_GPIO_ResetOutputPin(GPIOB, LL_GPIO_PIN_5);
+       LL_GPIO_ResetOutputPin(GPIOB, LL_GPIO_PIN_6);
+       LL_GPIO_ResetOutputPin(GPIOB, LL_GPIO_PIN_7);
+      break;
+    case 1:
+        LL_GPIO_SetOutputPin(GPIOB, LL_GPIO_PIN_3);
+      break;
+    case 2:
+      LL_GPIO_SetOutputPin(GPIOB, LL_GPIO_PIN_4);
+      break;
+    case 3:
+      LL_GPIO_SetOutputPin(GPIOB, LL_GPIO_PIN_5);
+      break;
+    case 4:
+      LL_GPIO_SetOutputPin(GPIOB, LL_GPIO_PIN_6);
+      break;
+    case 5:
+      LL_GPIO_SetOutputPin(GPIOB, LL_GPIO_PIN_7);
+      break;
+  }
+}
 
-/**
-  * @brief  The application entry point.
-  * @retval int
-  */
+void blink(){
+    LL_mDelay(100);
+    LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_13);
+    LL_mDelay(100);
+    LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_13);
+}
+
 int main(void)
 {
 
@@ -29,27 +60,40 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
 
+  int counter = 0;
+  int pushCount = 0;
+  bool push = false;
+
+  LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_13);
+  
   while (1)
   {
-    // blink();
-
     if(LL_GPIO_IsInputPinSet(GPIOA, LL_GPIO_PIN_0)) {
+      if(!push) {
+        counter++;
+        if(counter > 100) {
+          LL_mDelay(10);
+          push = LL_GPIO_IsInputPinSet(GPIOA, LL_GPIO_PIN_0);
+        }
+      }
+    } else {
+      if(push) {
+        setDigit(++pushCount);
+        push = false;
+      }
+      counter = 0;
+    }
+
+    if(pushCount > 5) {
+      pushCount = 0;
+      setDigit(0);
+
       LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_13);
-      LL_GPIO_ResetOutputPin(GPIOA, LL_GPIO_PIN_1);
     } else {
       LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_13);
-      LL_GPIO_SetOutputPin(GPIOA, LL_GPIO_PIN_1);
     }
   }
 
-}
-
-
-void blink(){
-    LL_mDelay(100);
-    LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_13);
-    LL_mDelay(100);
-    LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_13);
 }
 
 void SystemClock_Config(void)
@@ -84,6 +128,7 @@ static void MX_GPIO_Init(void)
   LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOC);
   LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOD);
   LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOA);
+   LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOB);
 
   LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_13);
 
@@ -102,6 +147,41 @@ static void MX_GPIO_Init(void)
   LL_GPIO_SetPinMode(GPIOA, LL_GPIO_PIN_1, LL_GPIO_MODE_OUTPUT);
   LL_GPIO_SetPinSpeed(GPIOA, LL_GPIO_PIN_1, LL_GPIO_SPEED_FREQ_MEDIUM);
   LL_GPIO_SetPinOutputType(GPIOA, LL_GPIO_PIN_1, LL_GPIO_OUTPUT_PUSHPULL);
+
+  GPIO_InitStruct.Pin = LL_GPIO_PIN_3;
+  GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
+  GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
+  GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+  LL_GPIO_ResetOutputPin(GPIOB, LL_GPIO_PIN_3);
+  LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  GPIO_InitStruct.Pin = LL_GPIO_PIN_4;
+  GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
+  GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
+  GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+  LL_GPIO_ResetOutputPin(GPIOB, LL_GPIO_PIN_4);
+  LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  GPIO_InitStruct.Pin = LL_GPIO_PIN_5;
+  GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
+  GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
+  GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+  LL_GPIO_ResetOutputPin(GPIOB, LL_GPIO_PIN_5);
+  LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  GPIO_InitStruct.Pin = LL_GPIO_PIN_6;
+  GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
+  GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
+  GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+  LL_GPIO_ResetOutputPin(GPIOB, LL_GPIO_PIN_6);
+  LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  GPIO_InitStruct.Pin = LL_GPIO_PIN_7;
+  GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
+  GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
+  GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+  LL_GPIO_ResetOutputPin(GPIOB, LL_GPIO_PIN_7);
+  LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 }
 
 void Error_Handler(void)
