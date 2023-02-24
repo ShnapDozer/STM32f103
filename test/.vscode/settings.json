@@ -1,4 +1,4 @@
 {
-    "cortex-debug.armToolchainPath": "/usr/bin",
-    "cortex-debug.openocdPath": "/usr/bin/openocd"
+    "cortex-debug.armToolchainPath": "C:\\USERS\\REWOODPC\\SCOOP\\APPS\\GCC-ARM-NONE-EABI\\CURRENT\\BIN",
+    "cortex-debug.openocdPath": "C:\\USERS\\REWOODPC\\SCOOP\\SHIMS\\OPENOCD.EXE"
 }

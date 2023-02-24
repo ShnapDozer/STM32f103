@@ -20,7 +20,7 @@
         "USE_FULL_LL_DRIVER",
         "VDD_VALUE=3300"
       ],
-      "compilerPath": "/usr/bin/arm-none-eabi-gcc"
+      "compilerPath": "C:\\USERS\\REWOODPC\\SCOOP\\APPS\\GCC-ARM-NONE-EABI\\CURRENT\\BIN\\ARM-NONE-EABI-GCC.EXE"
     }
   ],
   "version": 4

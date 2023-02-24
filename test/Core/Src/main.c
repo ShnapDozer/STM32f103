@@ -31,14 +31,26 @@ int main(void)
 
   while (1)
   {
-    LL_mDelay(1000);
-    LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_13);
-    LL_mDelay(1000);
-    LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_13);
+    // blink();
+
+    if(LL_GPIO_IsInputPinSet(GPIOA, LL_GPIO_PIN_0)) {
+      LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_13);
+      LL_GPIO_ResetOutputPin(GPIOA, LL_GPIO_PIN_1);
+    } else {
+      LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_13);
+      LL_GPIO_SetOutputPin(GPIOA, LL_GPIO_PIN_1);
+    }
   }
 
 }
 
+
+void blink(){
+    LL_mDelay(100);
+    LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_13);
+    LL_mDelay(100);
+    LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_13);
+}
 
 void SystemClock_Config(void)
 {
@@ -71,6 +83,7 @@ static void MX_GPIO_Init(void)
   /* GPIO Ports Clock Enable */
   LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOC);
   LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOD);
+  LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOA);
 
   LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_13);
 
@@ -80,6 +93,15 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
   LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
+// Настройка входных пинов:
+  LL_GPIO_SetPinMode(GPIOA, LL_GPIO_PIN_0, LL_GPIO_MODE_INPUT);
+  LL_GPIO_SetPinPull(GPIOA, LL_GPIO_PIN_0, LL_GPIO_PULL_DOWN);
+
+// Настройка выходных пинов:
+  LL_GPIO_ResetOutputPin(GPIOA, LL_GPIO_PIN_1);
+  LL_GPIO_SetPinMode(GPIOA, LL_GPIO_PIN_1, LL_GPIO_MODE_OUTPUT);
+  LL_GPIO_SetPinSpeed(GPIOA, LL_GPIO_PIN_1, LL_GPIO_SPEED_FREQ_MEDIUM);
+  LL_GPIO_SetPinOutputType(GPIOA, LL_GPIO_PIN_1, LL_GPIO_OUTPUT_PUSHPULL);
 }
 
 void Error_Handler(void)
